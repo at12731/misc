@@ -1,6 +1,6 @@
 # Goal
 
-Get url of internet shortcuts `.url` in the target location on Windows with PowerShell.
+Convert internet shortcuts `.url` in the target location on Windows with PowerShell.
 
 # Result
 
@@ -23,19 +23,13 @@ Result:
 
 ```json
 {
-  "CURRENT_DIR": [
-    "https://www.google.com.hk/"
-  ],
-  "Sub-dir": {
-    "Sub-sub-dir": {
-      "CURRENT_DIR": [
-        "https://www.apple.com/"
-      ]
-    },
-    "CURRENT_DIR": [
-      "https://www.microsoft.com/en-us/"
-    ]
-  }
+    "CURRENT_DIR": ["https://www.google.com.hk/"],
+    "Sub-dir": {
+        "Sub-sub-dir": {
+            "CURRENT_DIR": ["https://www.apple.com/"]
+        },
+        "CURRENT_DIR": ["https://www.microsoft.com/en-us/"]
+    }
 }
 ```
 
@@ -74,6 +68,6 @@ For more information, [about Scopes - PowerShell | Microsoft Docs](https://docs.
 
 # Reference
 
-- [Get target of shortcut (.lnk) file with powershell - Stack Overflow](https://stackoverflow.com/questions/42762122/get-target-of-shortcut-lnk-file-with-powershell)
+-   [Get target of shortcut (.lnk) file with powershell - Stack Overflow](https://stackoverflow.com/questions/42762122/get-target-of-shortcut-lnk-file-with-powershell)
 
-- [powershell - Unexpected ConvertTo-Json results? Answer: it has a default -Depth of 2 - Stack Overflow](https://stackoverflow.com/questions/53583677/unexpected-convertto-json-results-answer-it-has-a-default-depth-of-2)
+-   [powershell - Unexpected ConvertTo-Json results? Answer: it has a default -Depth of 2 - Stack Overflow](https://stackoverflow.com/questions/53583677/unexpected-convertto-json-results-answer-it-has-a-default-depth-of-2)
