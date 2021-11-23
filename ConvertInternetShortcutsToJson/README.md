@@ -1,68 +1,76 @@
 # Goal
 
-Convert internet shortcuts `.url` in the target location on Windows with PowerShell.
-
-# Result
-
-Generate a JSON file with all urls according to folder structure of target location.
+Convert internet shortcuts `.url` to a JSON file according to folder structure in the target location with PowerShell in Windows.
 
 # Example
 
+Show directory tree:
+
+```powershell
+PS D:\example> tree /f
 ```
-.
-│   Google.url
+
+```
+D:.
+│   Microsoft.url
 │
-└───Sub-dir
-    │   Microsoft – Cloud, Computers, Apps & Gaming.url
+└───sub-dir
+    │   Google.url
     │
-    └───Sub-sub-dir
+    └───sub-sub-dir
             Apple.url
+```
+
+Run:
+
+```powershell
+PS D:\repo\misc\ConvertInternetShortcutsToJson> .\Convert-InternetShortcuts.ps1 D:\example\ D:\
 ```
 
 Result:
 
 ```json
 {
-    "CURRENT_DIR": ["https://www.google.com.hk/"],
-    "Sub-dir": {
-        "Sub-sub-dir": {
+    "CURRENT_DIR": ["https://www.microsoft.com/en-us"],
+    "sub-dir": {
+        "CURRENT_DIR": ["https://www.google.com.hk/"],
+        "sub-sub-dir": {
             "CURRENT_DIR": ["https://www.apple.com/"]
-        },
-        "CURRENT_DIR": ["https://www.microsoft.com/en-us/"]
+        }
     }
 }
 ```
 
 # Note
 
-## Pipeline
+## Pipeline captured variable is not affected by upstream
 
-The below code can be simplified to one line with using pipeline:
+When passing the variable `$depth` to pipeline:
+
+```powershell
+Get-UrlsHierarchically(Get-Item $targetDir) | ConvertTo-Json -Depth $depth > (Join-Path $outputDir "UrlsResult.json")
+```
+
+`ConvertTo-Json` warn if the depth of directory is greater than 1:
+
+```
+WARNING: Resulting JSON is truncated as serialization has exceeded the set depth of 1.
+```
+
+It is because PowerShell interpret the line immediately before `$depth` is updated by the function `Get-UrlsHierarchically`. It means the initial value `1` will be captured.
+
+To avoid this, changed the code as below:
 
 ```powershell
 $result = Get-UrlsHierarchically(Get-Item $targetDir)
 ConvertTo-Json $result -Depth $depth > (Join-Path $outputDir "UrlsResult.json")
 ```
 
-To:
-
-```powershell
-Get-UrlsHierarchically(Get-Item $targetDir) | ConvertTo-Json -Depth $depth > (Join-Path $outputDir "UrlsResult.json")
-```
-
-However, PowerShell prompt this warning when the depth of directory is greater than 1:
-
-```
-WARNING: Resulting JSON is truncated as serialization has exceeded the set depth of 1.
-```
-
-It is because pipeline capture the variable `$depth` immediately before the function `Get-UrlsHierarchically` update the `$depth`. It means the value of `$depth` still is the initial value `1` when pass to cmdlet `ConvertTo-Json`.
-
-## Variable Scope
+## Variable Scope is distinguished by parent and child
 
 PowerShell is using parent and child scope to distinguish the variable scope instead of block level. It means the variable scope is affected by function and script but not for-block nor if-block etc.
 
-For a function need to access outside variable in the same script, use scope modifier `script:` (eg `$script:depth`)
+If a function need to access outside variable in the same script, use scope modifier `script:` (eg `$script:depth`)
 
 For more information, [about Scopes - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.1#parent-and-child-scopes)
 
