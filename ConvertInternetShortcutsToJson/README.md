@@ -1,8 +1,10 @@
-# Goal
+# Convert Internet Shortcuts To Json
+
+## Goal
 
 Convert internet shortcuts `.url` to a JSON file according to folder structure in the target location with PowerShell in Windows.
 
-# Example
+## Example
 
 Show directory tree:
 
@@ -41,9 +43,9 @@ Result:
 }
 ```
 
-# Note
+## Note
 
-## Pipeline captured variable is not affected by upstream
+### Pipeline captured variable is not affected by upstream
 
 When passing the variable `$depth` to pipeline:
 
@@ -66,7 +68,7 @@ $result = Get-UrlsHierarchically(Get-Item $targetDir)
 ConvertTo-Json $result -Depth $depth > (Join-Path $outputDir "UrlsResult.json")
 ```
 
-## Variable Scope is distinguished by parent and child
+### Variable Scope is distinguished by parent and child
 
 PowerShell is using parent and child scope to distinguish the variable scope instead of block level. It means the variable scope is affected by function and script but not for-block nor if-block etc.
 
@@ -74,7 +76,7 @@ If a function need to access outside variable in the same script, use scope modi
 
 For more information, [about Scopes - PowerShell | Microsoft Docs](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.1#parent-and-child-scopes)
 
-# Reference
+## Reference
 
 -   [Get target of shortcut (.lnk) file with powershell - Stack Overflow](https://stackoverflow.com/questions/42762122/get-target-of-shortcut-lnk-file-with-powershell)
 
