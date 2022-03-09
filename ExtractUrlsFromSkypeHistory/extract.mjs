@@ -36,7 +36,7 @@ import path from "node:path";
 
         try {
             if (!(await fs.stat(outputDirPath)).isDirectory()) {
-                throw "Ouput path is not a directory.";
+                throw "Output path is not a directory.";
             }
         } catch (ex) {
             // Create directory if not exists
@@ -108,11 +108,10 @@ function extractUrls(conv) {
     );
 
     for (const msg of msgs) {
-        // <e_m ... ts="{group1: edit seiral}" ...>
+        // <e_m ... ts="{group1: edit serial}" ...>
         const editedMsgMatch = msg.content.match(/<e_m.+?ts="([\d]+)".+?>/i);
         if (editedMsgMatch && editedMsgMatch[1]) {
-            // If this is another edited msg
-            // or the original arrival time greater than saved before
+            // Compare arrival time between messages with same edit serial then store the latest one
             if (
                 !editedMsgs[editedMsgMatch[1]] ||
                 msg.originalarrivaltime <=
@@ -125,6 +124,7 @@ function extractUrls(conv) {
         }
     }
 
+    // Extract edited messages
     Object.values(editedMsgs).map((msg) => {
         extract(msg.content);
     });
